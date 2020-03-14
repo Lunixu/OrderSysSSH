@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+
+
+
+	<!-- 注册jdbc.properties属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+	
+	
+	
+	<!-- 配置C3P0数据源 -->
+	<bean id="myC3P0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	
+	
+	
+	<!-- 配置SessionFactory -->
+	<!-- 
+		Spring的精髓是，所有的Bean均有Spring容器来管理，所以在Spring中若要使用Hibernate，就需要将SessionFactory交由Spring来管理，
+		配置SessionFactory的Bean,替换掉hibernate.cfg.xml文件，使用的实现类为LocalSessionFactoryBean。
+	 -->
+	 <bean id="mySessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	 	<!-- 使用C3P0数据源 -->
+	 	<property name="dataSource" ref="myC3P0DataSource"/>
+	 	<!-- 指明映射文件.hbm.xml的位置 -->
+	 	<property name="mappingLocations" value="classpath:com/edu/ssh/entity/*.hbm.xml"/>
+	 	<!-- Hibernate相关属性的配置 -->
+	 	<property name="hibernateProperties">
+	 		<props>
+	 			<!-- 配置方言属性 -->
+	 			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+	 			<!-- 显示SQL语句 -->
+	 			<prop key="hibernate.show_sql">true</prop>
+	 			<!-- 格式化SQL语句 -->
+	 			<prop key="hibernate.format_sql">true</prop>
+	 			<!-- 自动创建表的方式 -->
+	 			<prop key="hibernate.hbm2ddl.auto">update</prop>
+	 			<!-- 配置当前Hibernate Session所执行的上下文环境 -->
+	 			<!-- 其值不再是thread,而是SpringSessionContext,表示Session将交给Spring容器来管理 -->
+	 			<prop key="hibernate.current_session_context_class">
+	 				org.springframework.orm.hibernate4.SpringSessionContext
+	 			</prop>
+	 		</props>
+	 	</property>
+	 </bean>
+	 
+	 
+	 
+	 <!-- 配置UserDao -->
+	 <bean id="myUserDao" class="com.edu.ssh.dao.user.UserDaoImpl">
+	 	<property name="sessionFactory" ref="mySessionFactory"/>
+	 </bean>
+	 <!-- 配置DishDao -->
+	 <bean id="myDishDao" class="com.edu.ssh.dao.dish.DishDaoImpl">
+	 	<property name="sessionFactory" ref="mySessionFactory"/>
+	 </bean>
+	 <!-- 配置CustomerDao -->
+	 <bean id="myCustomerDao" class="com.edu.ssh.dao.customer.CustomerDaoImpl">
+	 	<property name="sessionFactory" ref="mySessionFactory"/>
+	 </bean>
+	 <!-- 配置TableDao -->
+	 <bean id="myTableDao" class="com.edu.ssh.dao.table.TableDaoImpl">
+	 	<property name="sessionFactory" ref="mySessionFactory"/>
+	 </bean>
+	 <!-- 配置OrderDao -->
+	<bean id="myOrderDao" class="com.edu.ssh.dao.order.OrderDaoImpl">
+		<property name="sessionFactory" ref="mySessionFactory"/>
+	</bean>
+	 
+	 
+	 
+	 <!-- 配置UserService -->
+	 <bean id="myUserService" class="com.edu.ssh.service.user.UserServiceImpl">
+	 	<property name="userDao" ref="myUserDao"/>
+	 </bean>
+	 <!-- 配置DishService -->
+	 <bean id="myDishService" class="com.edu.ssh.service.dish.DishServiceImpl">
+	 	<property name="dishDao" ref="myDishDao"/>
+	 </bean>
+	 <!-- 配置CustomerService -->
+	 <bean id="myCustomerService" class="com.edu.ssh.service.customer.CustomerServiceImpl">
+	 	<property name="customerDao" ref="myCustomerDao"/>
+	 </bean>
+	 <!-- 配置TableService -->
+	 <bean id="myTableService" class="com.edu.ssh.service.table.TableServiceImpl">
+	 	<property name="tableDao" ref="myTableDao"/>
+	 </bean>
+	 <!-- 配置OrderService -->
+	<bean id="myOrderService" class="com.edu.ssh.service.order.OrderServiceImpl">
+		<property name="orderDao" ref="myOrderDao"/>
+	</bean>
+	 
+	 
+	 
+	 <!-- 
+	 	对与程序相关的所有Action进行配置
+	  -->
+	 <!-- 配置CodeVerifyAction -->
+	 <bean id="myCodeVerifyAction" class="com.edu.ssh.action.login.CodeVerifyAction" scope="prototype">
+	 </bean>
+	 <!-- 配置LoginAction -->
+	 <bean id="myLoginAction" class="com.edu.ssh.action.login.LoginAction" scope="prototype">
+	 	<property name="myUserService" ref="myUserService"/>
+	 </bean>
+	 <!-- 配置ManagerNoticeAction -->
+	 <bean id="myManagerNoticeAction" class="com.edu.ssh.action.admin.ManagerNoticeAction" scope="prototype">
+	 </bean>
+	 <!-- 配置WaiterNoticeAction -->
+	 <bean id="myWaiterNoticeAction" class="com.edu.ssh.action.waiter.WaiterNoticeAction" scope="prototype">
+	 </bean>
+	 <!-- 配置WaiterNoticeAction -->
+	 <bean id="myKitchenNoticeAction" class="com.edu.ssh.action.kitchen.KitchenNoticeAction" scope="prototype">
+	 </bean>
+	 <!-- 配置UserAction -->
+	 <bean id="myUserAction" class="com.edu.ssh.action.admin.UserAction" scope="prototype">
+	 	<property name="userService" ref="myUserService"/>
+	 </bean>
+	 <!-- 配置DishAction -->
+	 <bean id="myDishAction" class="com.edu.ssh.action.admin.DishAction" scope="prototype">
+	 	<property name="dishService" ref="myDishService"/>
+	 </bean>
+	 <!-- 配置CustomerAction -->
+	 <bean id="myCustomerAction" class="com.edu.ssh.action.admin.CustomerAction" scope="prototype">
+	 	<property name="customerService" ref="myCustomerService"/>
+	 </bean>
+	 <!-- 配置TableAction -->
+	 <bean id="myTableAction" class="com.edu.ssh.action.admin.TableAction" scope="prototype">
+	 	<property name="tableService" ref="myTableService"/>
+	 </bean>
+	 <!-- 配置服务员菜品管理Action -->
+	 <bean id="myWaiterDishAction" class="com.edu.ssh.action.waiter.WaiterAction" scope="prototype">
+		<property name="dishService" ref="myDishService"/>
+		<property name="tableService" ref="myTableService"/>
+		<property name="orderService" ref="myOrderService"/>
+	 </bean>
+	  <!-- 配置后厨菜品管理Action -->
+	 <bean id="myKitchenDishAction" class="com.edu.ssh.action.kitchen.KitchenAction" scope="prototype">
+		<property name="dishService" ref="myDishService"/>
+		<property name="tableService" ref="myTableService"/>
+		<property name="orderService" ref="myOrderService"/>
+	 </bean>
+	 
+	 
+	 
+	 <!-- 配置事务管理器 -->
+	 <!-- 这里使用Hibernate的事务管理：HibernateTransactionManager,该类有个sessionFactory属性需要注入 -->
+	 <bean id="myTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	 	<!-- 注入sessionFactory -->
+	 	<property name="sessionFactory" ref="mySessionFactory"/>
+	 </bean>
+	 <!-- 配置事务通知和顾问 -->
+	 <!-- 配置事务通知 -->
+	 <tx:advice id="myAdvice" transaction-manager="myTransactionManager">
+	 	<tx:attributes>
+	 		<!-- 这些被指定的方法应用哪些事务特性 -->
+	 		<tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+	 		<tx:method name="*" propagation="REQUIRED"/>
+	 	</tx:attributes>
+	 </tx:advice>
+	 
+	 
+	 
+	 
+	 <!-- AspectJ的aop配置 -->
+	 <aop:config proxy-target-class="true">
+	 	<!-- 这里的切入点是指，要将事务通知植入到哪些类的哪些方法上 -->
+	 	<aop:pointcut expression="execution(* com.edu.ssh.service..*.*(..))" id="myPC"/>
+	 	<!-- 配置顾问 -->
+	 	<aop:advisor advice-ref="myAdvice" pointcut-ref="myPC"/>
+	 </aop:config>
+	 
+	 
+	 
+	 
+</beans>
+

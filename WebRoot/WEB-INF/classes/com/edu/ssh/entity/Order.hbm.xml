@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-8-15 23:27:18 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.edu.ssh.entity.Order" table="ORDERS">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="native" />
+        </id>
+        <property name="beginTime" type="java.util.Date">
+            <column name="BEGINTIME" />
+        </property>
+        <property name="endTime" type="java.util.Date">
+            <column name="ENDTIME" />
+        </property>
+        <many-to-one name="state" class="com.edu.ssh.entity.OrderState"
+        	 column="stateid" fetch="select" lazy="false"/>
+        <property name="waiterId" type="java.lang.Integer">
+            <column name="WAITERID" />
+        </property>
+        <property name="tableId" type="java.lang.Integer">
+            <column name="TABLEID" />
+        </property>
+        <set name="food" table="ORDERCONTENT" inverse="true" cascade="all" fetch="select" lazy="false">
+            <key column="orderid"/>
+            <one-to-many class="com.edu.ssh.entity.OrderContent" />
+        </set>
+    </class>
+</hibernate-mapping>

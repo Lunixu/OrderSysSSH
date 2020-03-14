@@ -1,0 +1,113 @@
+*{
+	margin:0px;
+	padding: 0px;
+}
+
+a{
+	text-decoration: none;
+	color: #333;
+}
+
+body{
+	background-color: #f9f9f9;
+}
+
+.container{
+	width: 97.5%;
+	height: 500px;
+	margin-left: 5px;
+}
+
+.container .main{
+	width: 100%;
+	height: 50px;
+	background-color: #f9f9f9;
+	border-right: 1px solid #dedede;
+	border-bottom: 1px solid #dedede;
+}
+
+.main:hover{
+	cursor: pointer;
+}
+
+.sub:hover{
+	cursor: pointer;
+}
+
+.container .sub{
+	width: 100%;
+	height: 50px;
+	background-color: #fff;
+	border-right: 1px solid #dedede;
+	border-bottom: 1px solid #dedede;
+}
+
+.main .icon1{
+	position: relative;
+	top:3px;
+}
+
+.main span{
+	font-family: "微软雅黑";
+	color: #333;
+	line-height: 50px;
+	margin-left: 10px;
+}
+
+.sub span{
+	font-family: "微软雅黑";
+	color: #333;
+	line-height: 50px;
+	margin-left: 10px;	
+}
+
+.stu{
+	position: relative;
+	left:-10px;
+	top:-12px;
+}
+
+.main .icon2{
+	position: relative;
+	top:3px;
+}
+
+.main .icon3{
+	position: relative;
+	left: 100px;
+	top:-3px;
+}
+
+.main .icon4{
+	position: relative;
+	top:3px;
+}
+
+.main .icon5{
+	position: relative;
+	top:3px;
+}
+
+.main .icon6{
+	position: relative;
+	top:3px;
+}
+
+.main .icon7{
+	position: relative;
+	top:3px;
+}
+
+.main .icon8{
+	position: relative;
+	top:3px;
+}
+
+.sub .icon21{
+	height:100%;
+	margin-left: 10px;
+}
+
+.sub{
+	display: none;
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="default" namespace="/" extends="struts-default">
+		<!-- class写Spring配置文件中Action Bean的id名 -->
+		<action name="codeVerify" class="myCodeVerifyAction" method="verify">
+		</action>
+		<!-- 登录验证 -->
+		<action name="loginAction" class="myLoginAction" method="validate">
+			<result name="admin" type="redirect">/admin/admin.jsp</result>
+			<result name="waiter" type="redirect">/waiter/waiter.jsp</result>
+			<result name="kitchen" type="redirect">/kitchen/kitchen.jsp</result>
+			<result name="fail" type="redirect">/login.jsp</result>
+		</action>
+		
+		<!-- 管理员发布公告Action -->
+		<action name="managerNoticeAction" class="myManagerNoticeAction" method="sendNotice">
+		</action>
+		<!-- 服务员显示公告Action -->
+		<action name="waiterNoticeAction" class="myWaiterNoticeAction" method="dealNotice">
+		</action>
+		<!-- 后厨显示公告Action -->
+		<action name="kitchenNoticeAction" class="myKitchenNoticeAction" method="dealNotice">
+		</action>
+		
+		<!-- 管理员员工管理Action -->
+		<action name="userAction-*" class="myUserAction" method="{1}">
+			<result name="{1}" type="redirect">/admin/user/user_{1}.jsp</result>
+			<result name="success" type="redirectAction">userAction-list</result>
+			<result name="search" type="redirect">/admin/user/showbykey.jsp</result>
+		</action>
+		
+		<!-- 管理员菜品管理Action -->
+		<action name="dishAction-*" class="myDishAction" method="{1}">
+			<result name="{1}" type="redirect">/admin/dish/dish_{1}.jsp</result>
+			<result name="success" type="redirectAction">dishAction-list</result>
+			<result name="search" type="redirect">/admin/dish/showDishByKey.jsp</result>
+		</action>
+		
+		<!-- 管理员消费者管理Action -->
+		<action name="customerAction-*" class="myCustomerAction" method="{1}">
+			<result name="{1}" type="redirect">/admin/customer/vip_{1}.jsp</result>
+			<result name="success" type="redirectAction">customerAction-list</result>
+			<result name="search" type="redirect">/admin/customer/showVipByKey.jsp</result>
+		</action>
+		
+		<!-- 管理员餐桌管理Action -->
+		<action name="tableAction-*" class="myTableAction" method="{1}">
+			<result name="{1}" type="redirect">/admin/table/table_{1}.jsp</result>
+			<result name="success" type="redirectAction">tableAction-list</result>
+			<result name="search" type="redirect">/admin/table/showTableByKey.jsp</result>
+		</action>
+	</package> 
+
+	<package name="default2" namespace="/" extends="struts-default">
+		<action name="waiterDishAction" class="myWaiterDishAction" method="list">
+			<result name="list" type="redirect">/waiter/wright.jsp</result>
+		</action>
+		<action name="testWaiterAction" class="myWaiterDishAction" method="test">
+		</action>
+		<action name="payWaiterAction" class="myWaiterDishAction" method="payservice">
+			<result name="payservice" type="redirect">/waiter/order/order_list.jsp</result>
+		</action>
+		<action name="orderOkWaiterAction" class="myWaiterDishAction" method="orderok">
+			<result name="orderok" type="redirectAction">orderPayAction-showorders</result>
+		</action>
+		<action name="orderPayAction-*" class="myWaiterDishAction" method="{1}">
+			<result name="{1}" type="redirect">/waiter/order/order_{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="default3" namespace="/" extends="struts-default">
+		<action name="kitchenDishAction-*" class="myKitchenDishAction" method="{1}">
+			<result name="{1}" type="redirect">/kitchen/korder/korder_{1}.jsp</result>
+		</action>
+	</package>
+	
+	
+</struts>    
